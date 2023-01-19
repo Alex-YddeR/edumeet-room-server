@@ -15,6 +15,7 @@ import {
 import { randomUUID } from 'crypto';
 import { createPeerMiddleware } from './middlewares/peerMiddleware';
 import { createChatMiddleware } from './middlewares/chatMiddleware';
+import { createCountdownTimerMiddleware } from './middlewares/countdownTimerMiddleware';
 import { createLockMiddleware } from './middlewares/lockMiddleware';
 import { createFileMiddleware } from './middlewares/fileMiddleware';
 import { createLobbyPeerMiddleware } from './middlewares/lobbyPeerMiddleware';
@@ -50,6 +51,7 @@ export default class Room extends EventEmitter {
 	public pendingPeers = List<Peer>();
 	public peers = List<Peer>();
 	public lobbyPeers = List<Peer>();
+	public _countdownTimerRef = null;
 
 	private lobbyPeerMiddleware: Middleware<PeerContext>;
 	private initialMediaMiddleware: Middleware<PeerContext>;
@@ -64,13 +66,20 @@ export default class Room extends EventEmitter {
 		this.id = id;
 		this.name = name;
 		this.parent = parent;
+		this._countdownTimerRef = null;
 
 		const middlewareOptions = {
 			room: this,
 			mediaService,
 			chatHistory: [],
 			fileHistory: [],
-		} as MiddlewareOptions;
+			_countdownTimerRef: this._countdownTimerRef,
+			countdownTimer: {
+				isEnabled: true,
+				isRunning: false,
+				left: '00:00:00'
+			}
+		} as unknown as MiddlewareOptions;
 
 		this.lobbyPeerMiddleware = createLobbyPeerMiddleware(middlewareOptions);
 		this.initialMediaMiddleware = createInitialMediaMiddleware(middlewareOptions);
@@ -81,6 +90,7 @@ export default class Room extends EventEmitter {
 			createModeratorMiddleware(middlewareOptions),
 			createMediaMiddleware(middlewareOptions),
 			createChatMiddleware(middlewareOptions),
+			createCountdownTimerMiddleware(middlewareOptions),
 			createFileMiddleware(middlewareOptions),
 			createLockMiddleware(middlewareOptions),
 			createLobbyMiddleware(middlewareOptions),

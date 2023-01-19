@@ -14,6 +14,7 @@ export const createJoinMiddleware = ({
 	room,
 	chatHistory,
 	fileHistory,
+	countdownTimer
 }: MiddlewareOptions): Middleware<PeerContext> => {
 	logger.debug('createJoinMiddleware() [room: %s]', room.id);
 
@@ -55,6 +56,7 @@ export const createJoinMiddleware = ({
 
 				response.peers = peers;
 				response.chatHistory = chatHistory;
+				response.countdownTimer = countdownTimer;
 				response.fileHistory = fileHistory;
 				response.lobbyPeers = lobbyPeers;
 				response.locked = room.locked;

@@ -26,6 +26,8 @@ export interface MiddlewareOptions {
 	mediaService: MediaService;
 	chatHistory: ChatMessage[];
 	fileHistory: FileMessage[];
+	countdownTimer: any;
+	_countdownTimerRef: any
 }
 
 export interface Role {

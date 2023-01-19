@@ -34,6 +34,7 @@
 		"debug": "^4.3.4",
 		"edumeet-common": "edumeet/edumeet-common",
 		"jsonwebtoken": "^8.5.1",
+		"moment": "^2.29.4",
 		"socket.io": "^4.5.3"
 	},
 	"optionalDependencies": {
